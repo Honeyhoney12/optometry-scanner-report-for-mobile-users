@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Redness Detection - Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #fff;
+            margin: 10px 0;
+        }
+        .details-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ffffffee;
+            border-radius: 12px;
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+            width: 320px;
+        }
+        p {
+            color: #555;
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        #video {
+            border: 4px solid #ddd;
+            border-radius: 12px;
+            margin-top: 20px;
+            width: 640px;
+            height: 480px;
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        #eye-power {
+            margin-top: 20px;
+            font-size: 22px;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            text-align: center;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <div class="details-container">
+        <h1>Welcome, {{ name }}</h1>
+        <p><strong>Gender:</strong> {{ gender }}</p>
+        <p><strong>Age:</strong> {{ age }}</p>
+    </div>
+
+    <h2>Live Video Feed</h2>
+    <img id="video" src="{{ url_for('video_feed') }}" alt="Video Feed">
+    
+    <div id="eye-power">Eye Power (Redness): -- %</div>
+
+    <script>
+        function updateRedness() {
+            fetch("{{ url_for('get_redness') }}")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("eye-power").innerText = `Eye Power : ${data.redness_percentage.toFixed(1)} %`;
+                })
+                .catch(error => console.error('Error fetching redness data:', error));
+        }
+        
+        // Update redness every 2 seconds
+        setInterval(updateRedness, 2000);
+    </script>
+</body>
+</html>
